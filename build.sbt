@@ -2,7 +2,7 @@ import Dependencies._
 
 ThisBuild / organization := "karazin-scala-users-group"
 ThisBuild / version      := "0.1.0-SNAPSHOT"
-ThisBuild / scalaVersion := "3.1.1"
+ThisBuild / scalaVersion := "3.1.2"
 
 lazy val root = project
   .in(file("."))
@@ -10,7 +10,7 @@ lazy val root = project
   .settings(commonSettings: _*)
 
 lazy val commonSettings = Seq(
-  crossScalaVersions := Seq("2.13", "3.0.0", "3.1.1"),
+  crossScalaVersions := Seq("3.1.2"),
   libraryDependencies ++= dependencies,
   testFrameworks += new TestFramework("munit.Framework"),
   scalacOptions ++= Seq(
