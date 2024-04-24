@@ -9,15 +9,16 @@ package karazin.scala.users.group.week1.homework
 object adt:
   
   enum ErrorOr[+V]:
-    
-    // Added to make it compilable. Remove it.
-    case DummyCase
-    
-    /* 
-      Two case must be defined: 
+
+    case Value(v: V)
+
+    case Error(e: Throwable)
+    /*
+      Two case must be defined:
       * a case for a regular value
       * a case for an error (it should contain an actual throwable)
      */
+    
   
     /* 
       The method is used for defining execution pipelines
@@ -26,8 +27,15 @@ object adt:
       Make sure that if an internal function is failed with an exception
       the exception is not thrown but the case for an error is returned
     */ 
-    def flatMap = ???
+    def flatMap[Q](f : V => ErrorOr[Q]) : ErrorOr[Q] =
+      this match
+        case ErrorOr.Value(v) =>
+          try
+            f(v)
+          catch
+            case e: Throwable => ErrorOr.Error(e)
 
+        case ErrorOr.Error(e) => ErrorOr.Error(e)
     /* 
       The method is used for changing the internal object
       Provide a type parameter, an argument and a result type
@@ -35,7 +43,15 @@ object adt:
       Make sure that if an internal function is failed with an exception
       the exception is not thrown but the case for an error is returned
      */
-    def map = ???
+    def map[Q](f : V => Q): ErrorOr[Q] =
+      this match
+        case ErrorOr.Value(v) =>
+          try
+            ErrorOr.Value(f(v))
+          catch
+            case e: Throwable => ErrorOr.Error(e)
+
+        case ErrorOr.Error(e) => ErrorOr.Error(e)
       
   // Companion object to define constructor
   object ErrorOr:
@@ -45,6 +61,11 @@ object adt:
       Make sure that if an internal function is failed with an exception
       the exception is not thrown but the case for an error is returned
     */
-    def apply = ???
+    def apply[V](v: V): ErrorOr[V] =
+      try
+        ErrorOr.Value(v)
+      catch
+        case e: Throwable => ErrorOr.Error(e)
+
       
   
