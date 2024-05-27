@@ -24,17 +24,7 @@ object program extends App:
     ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(10))
 
   given ExecutionContext = ExecutionContext.global
-  /*
-    Replace `ErrorOr[List[PostView]] result type with `ErrorOrT[Future, List[PostView]]
-    Provide the implementation for the service
-   */
-  def getPostsViews(apiKey: String)(commentsFilter: List[Comment] => Boolean,
-                                    likesFilter: List[Like] => Boolean): ErrorOr[List[PostView]] = ???
 
-  /*
-    Replace `ErrorOr[PostView] result type with `ErrorOrT[Future, PostView]
-    Provide the implementation for the service
-  */
   def getPostView(post: Post)(commentsFilter: List[Comment] => Boolean,
                               likesFilter: List[Like] => Boolean)
                  (using ExecutionContext): ErrorOrT[Future, PostView] =

@@ -31,7 +31,7 @@ object services:
       }(EC).recover { case e: Throwable => ErrorOr.Error(e) }
     )
 
-  def getPosts(userId: UUID)
+  def getPosts(userId: UserId)
               (using EC: ExecutionContext): ErrorOrT[Future, List[Post]] =
     ErrorOrT[Future, List[Post]](
       Future {
@@ -43,7 +43,7 @@ object services:
       }(EC).recover { case e: Throwable => ErrorOr.Error(e) }
     )
 
-  def getComments(postId: UUID)
+  def getComments(postId: PostId)
                  (using EC: ExecutionContext): ErrorOrT[Future, List[Comment]] =
     ErrorOrT[Future, List[Comment]](
       Future {
@@ -55,7 +55,7 @@ object services:
       }(EC).recover { case e: Throwable => ErrorOr.Error(e) }
     )
 
-  def getLikes(postId: UUID)
+  def getLikes(postId: PostId)
               (using EC: ExecutionContext): ErrorOrT[Future, List[Like]] =
     ErrorOrT[Future, List[Like]](
       Future {
@@ -67,7 +67,7 @@ object services:
       }(EC).recover { case e: Throwable => ErrorOr.Error(e) }
     )
 
-  def getShares(postId: UUID)
+  def getShares(postId: PostId)
                (using EC: ExecutionContext): ErrorOrT[Future, List[Share]] =
     ErrorOrT[Future, List[Share]](
       Future {
