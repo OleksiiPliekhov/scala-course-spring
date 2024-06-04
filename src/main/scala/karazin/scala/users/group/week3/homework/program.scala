@@ -21,7 +21,7 @@ object program extends App:
     ExecutionContext.fromExecutorService(Executors.newSingleThreadExecutor())
 
   val fixedThreadPoolContext: ExecutionContextExecutorService =
-    ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(10))
+    ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(20))
 
   given ExecutionContext = ExecutionContext.global
 
@@ -41,6 +41,22 @@ object program extends App:
       if likesFilter(likes)
       shares <- getSharesService
     yield PostView(post, comments, likes, shares)
+
+  def getPostsViews(userId: UserId)(commentsFilter: List[Comment] => Boolean,
+                                    likesFilter: List[Like] => Boolean)
+                   (using ExecutionContext): ErrorOrT[Future, List[PostView]] =
+    println(s"Main thread: ${Thread.currentThread().getName}")
+
+    for
+      posts <- getPosts(userId)
+      postViews <- ErrorOrT(
+        Future.sequence(posts.map(post => getPostView(post)(commentsFilter, likesFilter).value)).map { listOfErrorOr =>
+          listOfErrorOr.foldLeft[ErrorOr[List[PostView]]](ErrorOr.Value(Nil)) { (acc, item) =>
+            acc.flatMap(accList => item.map(_ :: accList))
+          }.map(_.reverse)
+        }
+      )
+    yield postViews
 
   getPostView(Post(UserId.generate, PostId.generate))(_ => true, _ => true).value.onComplete {
     case Success(value) => println(s"Completed with $value")
